@@ -29,13 +29,20 @@ export default function initUI() {
     const navLinks = document.querySelector('.nav-links');
 
     if (menuToggle && navLinks) {
+        console.log('📱 Mobile menu elements found');
+
         // Create overlay
         const overlay = document.createElement('div');
         overlay.className = 'menu-overlay';
         overlay.setAttribute('aria-hidden', 'true');
         document.body.appendChild(overlay);
 
-        const toggleMenu = () => {
+        const toggleMenu = (e) => {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            console.log('🍔 Menu toggle clicked');
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
             menuToggle.setAttribute('aria-expanded', !isExpanded);
             navLinks.classList.toggle('active');
@@ -43,12 +50,29 @@ export default function initUI() {
             document.body.style.overflow = isExpanded ? '' : 'hidden';
         };
 
+        // Click event for desktop
         menuToggle.addEventListener('click', toggleMenu);
+
+        // Touch events for mobile - more reliable
+        menuToggle.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            toggleMenu(e);
+        }, { passive: false });
+
         overlay.addEventListener('click', toggleMenu);
+        overlay.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            toggleMenu(e);
+        }, { passive: false });
 
         // Close menu when clicking a link
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+            link.addEventListener('touchend', (e) => {
                 if (navLinks.classList.contains('active')) {
                     toggleMenu();
                 }
@@ -61,6 +85,8 @@ export default function initUI() {
                 toggleMenu();
             }
         });
+    } else {
+        console.warn('⚠️ Mobile menu elements not found');
     }
 
     // ═══════════════════════════════════════════════════════════
