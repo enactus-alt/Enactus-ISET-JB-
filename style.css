@@ -1149,33 +1149,241 @@ button[type="submit"]:hover .plane-icon {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE - MOBILE FIRST
 ═══════════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-    .glass-nav {
-        padding: 0.8rem 1.5rem;
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+
+    .mission-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-
-    .nav-links a {
-        font-size: 0.75rem;
-        letter-spacing: 1px;
     }
 
     .project-item {
         flex-direction: column;
+        gap: 2rem;
+    }
+
+    .project-info,
+    .ba-slider {
+        width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    /* Navigation */
+    .glass-nav {
+        padding: 0.8rem 1rem;
+        gap: 0.5rem;
+    }
+
+    .nav-logo {
+        height: 35px;
+    }
+
+    /* Hero Section - Critical Fixes */
+    .hero-section {
+        padding: 0 1rem;
+    }
+
+    .hero-content {
+        padding: 0 1rem;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        -webkit-text-stroke: 1px var(--color-gold);
+        letter-spacing: 0.1rem;
+    }
+
+    .hero-title .highlight {
+        font-size: 2.2rem;
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 0.2rem;
+    }
+
+    #globe-container canvas {
+        transform: scale(0.6);
+    }
+
+    .scroll-indicator {
+        bottom: 20px;
+    }
+
+    /* Sections */
+    .section-padding {
+        padding: 4rem 1rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .section-watermark {
+        width: 200px;
+        opacity: 0.02;
+    }
+
+    /* Mission Cards */
+    .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .mission-card {
+        padding: 1.5rem;
+    }
+
+    .mission-card h3 {
+        font-size: 1.3rem;
+    }
+
+    /* Team Section */
+    #team-container {
+        height: 400px;
+    }
+
+    .team-avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .avatar-content {
+        font-size: 0.9rem;
+    }
+
+    .avatar-info h4 {
+        font-size: 0.9rem;
+    }
+
+    .avatar-info p {
+        font-size: 0.7rem;
+    }
+
+    /* Projects */
+    .project-item {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .project-info h3 {
+        font-size: 1.8rem;
+    }
+
+    .project-tagline {
+        font-size: 1rem;
     }
 
     .ba-slider {
         width: 100%;
-        height: 300px;
+        height: 250px;
+        margin-top: 1rem;
     }
 
-    .mission-grid {
-        grid-template-columns: 1fr;
+    .read-more-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    /* Contact */
+    .contact-container {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+    }
+
+    .input-group input,
+    .input-group textarea {
+        font-size: 1rem;
+    }
+
+    #submit-btn {
+        padding: 0.8rem 2rem;
+        font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 2rem 1rem;
+    }
+
+    .footer-logo {
+        width: 80px;
+    }
+
+    .map-container {
+        height: 50px;
+    }
+
+    /* Preloader */
+    .preloader-logo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .preloader-text {
+        font-size: 1rem;
+        letter-spacing: 0.3rem;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 400px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+
+    .hero-title .highlight {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 0.15rem;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .mission-card h3 {
+        font-size: 1.1rem;
+    }
+
+    #team-container {
+        height: 350px;
+    }
+
+    .team-avatar {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        min-height: auto;
+        padding: 3rem 1rem;
+    }
+
+    #globe-container canvas {
+        transform: scale(0.4);
+    }
+
+    .scroll-indicator {
+        display: none;
     }
 }
