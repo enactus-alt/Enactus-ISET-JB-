@@ -84,7 +84,8 @@
             </div>
 
             <!-- Mobile Menu Toggle -->
-            <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false"
+                onclick="document.querySelector('.nav-links').classList.toggle('active'); document.querySelector('.menu-overlay')?.classList.toggle('active'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
