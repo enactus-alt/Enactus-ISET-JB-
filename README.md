@@ -30,7 +30,7 @@ A premium, visually stunning website for Enactus ISET Djerba featuring advanced 
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/enactusweb.git
+git clone https://github.com/ADEM2005373/enactusweb.git
 
 # Navigate to project
 cd enactusweb
@@ -78,7 +78,7 @@ Fully responsive with:
 
 ## 🌐 Live Demo
 
-[View Live Site](https://YOUR_USERNAME.github.io/enactusweb/)
+[View Live Site](https://ADEM2005373.github.io/enactusweb/)
 
 ## 👥 Team
 
