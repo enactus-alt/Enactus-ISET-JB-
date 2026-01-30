@@ -75,14 +75,86 @@
 
     <!-- Main App -->
     <main id="app" role="main">
-        <!-- Floating Navigation Buttons -->
-        <div class="floating-nav-container">
-            <a href="#home" class="floating-logo-btn" aria-label="Scroll to top">
-                <img src="assets/img/logo.png" alt="Enactus Logo">
-            </a>
-            <a href="#contact" class="floating-join-btn" aria-label="Join Us">
-                Join Us
-            </a>
+        <!-- ═══════════════════════════════════════════════════════════
+             ULTRA PREMIUM NAVIGATION SYSTEM
+        ═══════════════════════════════════════════════════════════ -->
+
+        <!-- Desktop Navigation - Floating Glass Bar -->
+        <nav class="premium-nav" id="premium-nav">
+            <div class="nav-inner">
+                <a href="#home" class="nav-brand">
+                    <img src="assets/img/logo.png" alt="Enactus ISET Djerba">
+                    <span class="brand-text">ENACTUS</span>
+                </a>
+
+                <div class="nav-menu" id="nav-menu">
+                    <a href="#home" class="nav-link active" data-section="home">
+                        <span class="link-icon">⌂</span>
+                        <span class="link-text">Home</span>
+                    </a>
+                    <a href="#mission" class="nav-link" data-section="mission">
+                        <span class="link-icon">◎</span>
+                        <span class="link-text">Mission</span>
+                    </a>
+                    <a href="#team" class="nav-link" data-section="team">
+                        <span class="link-icon">◈</span>
+                        <span class="link-text">Team</span>
+                    </a>
+                    <a href="#projects" class="nav-link" data-section="projects">
+                        <span class="link-icon">◆</span>
+                        <span class="link-text">Projects</span>
+                    </a>
+                    <a href="#contact" class="nav-link nav-cta">
+                        <span class="cta-glow"></span>
+                        <span class="link-text">Join Us</span>
+                        <span class="cta-arrow">→</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Hamburger Toggle -->
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-overlay" id="mobile-overlay"></div>
+
+        <!-- Mobile Slide Menu -->
+        <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-menu-header">
+                <img src="assets/img/logo.png" alt="Enactus" class="mobile-logo">
+                <span class="mobile-brand">ENACTUS ISET DJERBA</span>
+            </div>
+            <div class="mobile-menu-links">
+                <a href="#home" class="mobile-link" data-section="home">
+                    <span class="mobile-link-icon">⌂</span>
+                    <span>Home</span>
+                </a>
+                <a href="#mission" class="mobile-link" data-section="mission">
+                    <span class="mobile-link-icon">◎</span>
+                    <span>Mission</span>
+                </a>
+                <a href="#team" class="mobile-link" data-section="team">
+                    <span class="mobile-link-icon">◈</span>
+                    <span>Team</span>
+                </a>
+                <a href="#projects" class="mobile-link" data-section="projects">
+                    <span class="mobile-link-icon">◆</span>
+                    <span>Projects</span>
+                </a>
+                <a href="#contact" class="mobile-link mobile-cta">
+                    <span class="mobile-link-icon">★</span>
+                    <span>Join Us</span>
+                </a>
+            </div>
+            <div class="mobile-menu-footer">
+                <p>© 2026 Enactus ISET Djerba</p>
+                <p class="mobile-tagline">Future Makers</p>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════

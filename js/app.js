@@ -7,10 +7,14 @@ import initMission from './mission.js';
 import initTeam from './team.js';
 import initProjects from './projects.js';
 import initContact from './contact.js';
+import { initNavigation } from './navigation.js';
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Enactus ISET Djerba - Future Makers Initializing...");
+
+    // Initialize Navigation first
+    initNavigation();
 
     // Initialize Global UI 
     initUI();
