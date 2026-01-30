@@ -1064,74 +1064,78 @@ body.cursor-hover .cursor-ring {
 ═══════════════════════════════════════════════════════════ */
 .contact-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.input-group {
-    margin-bottom: 2rem;
-    position: relative;
+.hiring-animation-container {
+    text-align: center;
+    padding: 3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
 }
 
-input,
-textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    padding: 1.2rem 0;
+.hiring-text {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 5vw, 4rem);
     color: var(--color-text);
-    font-family: var(--font-body);
-    font-size: 1.1rem;
-    outline: none;
-    transition: border-color 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 2px;
 }
 
-input:focus,
-textarea:focus {
-    border-color: var(--color-gold);
+.hiring-text .highlight {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-gold);
+    position: relative;
+    display: inline-block;
+    animation: hiringGlow 2s ease-in-out infinite alternate;
 }
 
-input::placeholder,
-textarea::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+@keyframes hiringGlow {
+    from {
+        text-shadow: 0 0 10px var(--color-gold), 0 0 20px var(--color-gold-glow);
+        color: rgba(255, 194, 34, 0.1);
+    }
+
+    to {
+        text-shadow: 0 0 30px var(--color-gold), 0 0 50px var(--color-gold-glow);
+        color: var(--color-gold);
+    }
 }
 
-.input-line {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--color-gold);
-    transition: width 0.3s ease;
-    box-shadow: 0 0 10px var(--color-gold);
+.hiring-subtitle {
+    font-size: 1.3rem;
+    color: var(--color-text-mute);
+    max-width: 600px;
+    line-height: 1.6;
 }
 
-input:focus~.input-line,
-textarea:focus~.input-line {
-    width: 100%;
-}
-
-button[type="submit"] {
+.hiring-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
     background: transparent;
     border: 2px solid var(--color-gold);
     color: var(--color-gold);
-    padding: 1.2rem 3rem;
+    padding: 1.2rem 3.5rem;
     font-family: var(--font-heading);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     border-radius: 50px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
+    text-decoration: none;
     transition: all 0.3s ease;
-    position: relative;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
+    font-weight: 600;
 }
 
-button[type="submit"]::before {
+.hiring-btn::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -1140,29 +1144,30 @@ button[type="submit"]::before {
     height: 0;
     background: var(--color-gold);
     border-radius: 50%;
-    transition: all 0.4s ease;
+    transition: all 0.5s ease;
     transform: translate(-50%, -50%);
     z-index: -1;
 }
 
-button[type="submit"]:hover::before {
-    width: 300px;
-    height: 300px;
+.hiring-btn:hover::before {
+    width: 450px;
+    height: 450px;
 }
 
-button[type="submit"]:hover {
+.hiring-btn:hover {
     color: #000;
-    border-color: var(--color-gold);
     box-shadow: 0 0 40px var(--color-gold-glow);
+    transform: translateY(-5px);
+    border-color: var(--color-gold);
 }
 
-.plane-icon {
+.hiring-btn .arrow-icon {
     font-size: 1.5rem;
     transition: transform 0.3s ease;
 }
 
-button[type="submit"]:hover .plane-icon {
-    transform: translateX(5px) translateY(-5px);
+.hiring-btn:hover .arrow-icon {
+    transform: translateX(8px);
 }
 
 /* ═══════════════════════════════════════════════════════════
