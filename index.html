@@ -75,30 +75,15 @@
 
     <!-- Main App -->
     <main id="app" role="main">
-        <!-- Navigation -->
-        <nav class="glass-nav" role="navigation" aria-label="Main navigation">
-            <div class="logo">
-                <a href="#home" aria-label="Enactus ISET Djerba - Home">
-                    <img src="assets/img/logo.png" alt="Enactus ISET Djerba Logo" class="nav-logo">
-                </a>
-            </div>
-
-            <!-- Mobile Menu Toggle -->
-            <!-- Mobile Menu Toggle (Removed for single button approach) -->
-            <!-- <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button> -->
-
-            <div class="nav-links" role="menubar">
-                <a href="#home" role="menuitem">Home</a>
-                <a href="#mission" role="menuitem">Mission</a>
-                <a href="#team" role="menuitem">Team</a>
-                <a href="#projects" role="menuitem">Projects</a>
-                <a href="#contact" role="menuitem">Join Us</a>
-            </div>
-        </nav>
+        <!-- Floating Navigation Buttons -->
+        <div class="floating-nav-container">
+            <a href="#home" class="floating-logo-btn" aria-label="Scroll to top">
+                <img src="assets/img/logo.png" alt="Enactus Logo">
+            </a>
+            <a href="#contact" class="floating-join-btn" aria-label="Join Us">
+                Join Us
+            </a>
+        </div>
 
         <!-- ═══════════════════════════════════════════════════════════
              HERO SECTION - THE WOW MOMENT
@@ -330,10 +315,6 @@
             </div>
             <p>&copy; 2026 Enactus ISET Djerba. Future Makers.</p>
         </section>
-        <!-- Floating Join Us Button (Mobile Only) -->
-        <a href="#contact" class="floating-join-btn" aria-label="Join Us">
-            Join Us
-        </a>
     </main>
 
     <!-- Main Script -->
