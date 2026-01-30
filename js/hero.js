@@ -4,13 +4,22 @@ export default function initHero() {
     const container = document.getElementById('globe-container');
     if (!container) return;
 
+    // Mobile detection for performance optimization
+    const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: !isMobile, // Disable antialiasing on mobile
+        powerPreference: isMobile ? 'low-power' : 'high-performance',
+        preserveDrawingBuffer: false
+    });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // Ensure transparent background
     container.appendChild(renderer.domElement);
 
     // ═══════════════════════════════════════════════════════════
@@ -44,17 +53,17 @@ export default function initHero() {
     const particlesCount = 200;
     const particlesGeom = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particlesCount * 3);
-    
-    for(let i = 0; i < particlesCount; i++) {
+
+    for (let i = 0; i < particlesCount; i++) {
         const phi = Math.acos(-1 + (2 * i) / particlesCount);
         const theta = Math.sqrt(particlesCount * Math.PI) * phi;
-        
+
         const r = 18 + Math.random() * 5;
-        particlePositions[i * 3]     = r * Math.cos(theta) * Math.sin(phi);
+        particlePositions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
         particlePositions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
         particlePositions[i * 3 + 2] = r * Math.cos(phi);
     }
-    
+
     particlesGeom.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
     const particlesMat = new THREE.PointsMaterial({
         color: 0xFFC222,
@@ -89,7 +98,7 @@ export default function initHero() {
         (texture) => {
             // Add slight glow filter to texture
             texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-            
+
             const logoSize = 6;
             const logoGeometry = new THREE.PlaneGeometry(logoSize, logoSize); // Plane matches image better
             const logoMaterial = new THREE.MeshBasicMaterial({
@@ -172,5 +181,15 @@ export default function initHero() {
 
     animate();
 
-    console.log('🌍 Digital Biosphere Initialized');
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newWidth, newHeight);
+    });
+
+    console.log(`🌍 Digital Biosphere Initialized (${isMobile ? 'mobile' : 'desktop'} mode)`);
 }

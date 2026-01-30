@@ -30,6 +30,7 @@ export default function initParticles() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+    renderer.setClearColor(0x000000, 0); // Ensure fully transparent background
 
     // REDUCED particles on mobile for performance
     const particlesCount = isMobile ? 500 : 2000;

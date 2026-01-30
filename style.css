@@ -29,8 +29,21 @@ body {
     color: var(--color-text);
     font-family: var(--font-body);
     overflow-x: hidden;
-    cursor: none;
     min-height: 100vh;
+}
+
+/* Custom cursor only on desktop */
+@media (min-width: 769px) and (hover: hover) and (pointer: fine) {
+    body {
+        cursor: none;
+    }
+
+    a,
+    button,
+    input,
+    textarea {
+        cursor: none;
+    }
 }
 
 body::before {
@@ -46,13 +59,6 @@ body::before {
         radial-gradient(ellipse at 50% 50%, rgba(255, 194, 34, 0.02) 0%, transparent 70%);
     pointer-events: none;
     z-index: -1;
-}
-
-a,
-button,
-input,
-textarea {
-    cursor: none;
 }
 
 /* Text Selection */
@@ -84,51 +90,61 @@ textarea {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   CUSTOM CURSOR - DRAMATIC MAGNETIC EFFECT
+   CUSTOM CURSOR - DRAMATIC MAGNETIC EFFECT (DESKTOP ONLY)
 ═══════════════════════════════════════════════════════════ */
-.cursor-dot {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 12px;
-    height: 12px;
-    background: var(--color-gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate(-50%, -50%);
-    box-shadow:
-        0 0 20px var(--color-gold),
-        0 0 40px var(--color-gold-glow),
-        0 0 60px var(--color-gold-glow);
-    transition: transform 0.1s ease-out;
-}
-
+.cursor-dot,
 .cursor-ring {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    border: 2px solid var(--color-gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99998;
-    transform: translate(-50%, -50%);
-    transition: all 0.2s ease-out;
-    opacity: 0.5;
+    display: none;
 }
 
-body.cursor-hover .cursor-dot {
-    transform: translate(-50%, -50%) scale(0.5);
-}
+/* Show cursor only on non-touch desktops */
+@media (min-width: 769px) and (hover: hover) and (pointer: fine) {
+    .cursor-dot {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 12px;
+        height: 12px;
+        background: var(--color-gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        box-shadow:
+            0 0 20px var(--color-gold),
+            0 0 40px var(--color-gold-glow),
+            0 0 60px var(--color-gold-glow);
+        transition: transform 0.1s ease-out;
+    }
 
-body.cursor-hover .cursor-ring {
-    width: 80px;
-    height: 80px;
-    border-color: var(--color-gold);
-    background: rgba(255, 194, 34, 0.1);
-    opacity: 1;
+    .cursor-ring {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        border: 2px solid var(--color-gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 99998;
+        transform: translate(-50%, -50%);
+        transition: all 0.2s ease-out;
+        opacity: 0.5;
+    }
+
+    body.cursor-hover .cursor-dot {
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    body.cursor-hover .cursor-ring {
+        width: 80px;
+        height: 80px;
+        border-color: var(--color-gold);
+        background: rgba(255, 194, 34, 0.1);
+        opacity: 1;
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1482,7 +1498,86 @@ body.cursor-hover .cursor-ring {
         display: none;
     }
 }
-/* Floating button hidden on desktop */
+
+/* Floating Join Button (Mobile Only) */
 .floating-join-btn {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .floating-join-btn {
+        display: flex;
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        padding: 16px 28px;
+        background: linear-gradient(135deg, var(--color-gold) 0%, #FFB800 100%);
+        color: #000;
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 700;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-radius: 50px;
+        box-shadow:
+            0 4px 20px rgba(255, 194, 34, 0.5),
+            0 8px 40px rgba(255, 194, 34, 0.3);
+        z-index: 9999;
+        transition: all 0.3s ease;
+        animation: floatPulse 3s ease-in-out infinite;
+    }
+
+    .floating-join-btn:active {
+        transform: scale(0.95);
+    }
+
+    @keyframes floatPulse {
+
+        0%,
+        100% {
+            transform: translateY(0);
+            box-shadow:
+                0 4px 20px rgba(255, 194, 34, 0.5),
+                0 8px 40px rgba(255, 194, 34, 0.3);
+        }
+
+        50% {
+            transform: translateY(-8px);
+            box-shadow:
+                0 8px 30px rgba(255, 194, 34, 0.6),
+                0 15px 50px rgba(255, 194, 34, 0.4);
+        }
+    }
+
+    /* Hide custom cursor elements completely on mobile */
+    .cursor-dot,
+    .cursor-ring {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+    /* Fix Three.js canvas for mobile - ensure no white blocks */
+    #globe-container canvas,
+    #particle-bg {
+        background: transparent !important;
+        image-rendering: auto;
+    }
+
+    /* Ensure hero logo doesn't cause issues */
+    .hero-logo {
+        width: 100px;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 400px) {
+    .floating-join-btn {
+        bottom: 20px;
+        right: 20px;
+        padding: 14px 22px;
+        font-size: 0.9rem;
+    }
 }
