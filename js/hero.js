@@ -13,205 +13,164 @@ export default function initHero() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create a dramatic wireframe globe
-    const globeGeometry = new THREE.IcosahedronGeometry(15, 3);
-    const globeMaterial = new THREE.MeshBasicMaterial({
+    // ═══════════════════════════════════════════════════════════
+    // DIGITAL BIOSPHERE - COMPLEX GEOMETRY
+    // ═══════════════════════════════════════════════════════════
+
+    // 1. Core Glowing Sphere
+    const coreGeometry = new THREE.IcosahedronGeometry(10, 2);
+    const coreMaterial = new THREE.MeshBasicMaterial({
         color: 0xFFC222,
         wireframe: true,
         transparent: true,
-        opacity: 0.3
+        opacity: 0.15
     });
-    const globe = new THREE.Mesh(globeGeometry, globeMaterial);
-    scene.add(globe);
+    const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
+    scene.add(coreSphere);
 
-    // Inner glowing sphere
-    const innerGeometry = new THREE.SphereGeometry(14, 32, 32);
-    const innerMaterial = new THREE.MeshBasicMaterial({
-        color: 0xFFC222,
+    // 2. The Tech Shell (Voronoi-like effect)
+    const shellGeometry = new THREE.IcosahedronGeometry(15, 1);
+    const shellMaterial = new THREE.MeshBasicMaterial({
+        color: 0xFFD666,
+        wireframe: true,
         transparent: true,
-        opacity: 0.05
+        opacity: 0.05,
+        blending: THREE.AdditiveBlending
     });
-    const innerSphere = new THREE.Mesh(innerGeometry, innerMaterial);
-    scene.add(innerSphere);
+    const shell = new THREE.Mesh(shellGeometry, shellMaterial);
+    scene.add(shell);
+
+    // 3. Floating Data Particles (Orbiting)
+    const particlesCount = 200;
+    const particlesGeom = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particlesCount * 3);
+    
+    for(let i = 0; i < particlesCount; i++) {
+        const phi = Math.acos(-1 + (2 * i) / particlesCount);
+        const theta = Math.sqrt(particlesCount * Math.PI) * phi;
+        
+        const r = 18 + Math.random() * 5;
+        particlePositions[i * 3]     = r * Math.cos(theta) * Math.sin(phi);
+        particlePositions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
+        particlePositions[i * 3 + 2] = r * Math.cos(phi);
+    }
+    
+    particlesGeom.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    const particlesMat = new THREE.PointsMaterial({
+        color: 0xFFC222,
+        size: 0.15,
+        transparent: true,
+        opacity: 0.6
+    });
+    const particleSystem = new THREE.Points(particlesGeom, particlesMat);
+    scene.add(particleSystem);
+
+    // 4. Orbital Rings (The "Saturn" effect)
+    const ringGeo = new THREE.TorusGeometry(22, 0.1, 2, 100);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xFFC222, transparent: true, opacity: 0.2 });
+    const orbitRing = new THREE.Mesh(ringGeo, ringMat);
+    orbitRing.rotation.x = Math.PI / 2;
+    orbitRing.rotation.y = -Math.PI / 8;
+    scene.add(orbitRing);
+
+    const ringGeo2 = new THREE.TorusGeometry(26, 0.05, 2, 100);
+    const orbitRing2 = new THREE.Mesh(ringGeo2, ringMat);
+    orbitRing2.rotation.x = Math.PI / 1.8;
+    orbitRing2.rotation.y = Math.PI / 6;
+    scene.add(orbitRing2);
 
     // ═══════════════════════════════════════════════════════════
-    // LOGO FLOATING INSIDE THE GLOBE - WITH ERROR HANDLING
+    // LOGO FLOATING INSIDE THE GLOBE
     // ═══════════════════════════════════════════════════════════
     const textureLoader = new THREE.TextureLoader();
 
-    // Load texture with error handling
     textureLoader.load(
         'assets/img/logo.png',
-        // Success callback
         (texture) => {
-            const logoSize = 8;
-            const logoGeometry = new THREE.CircleGeometry(logoSize / 2, 64);
+            // Add slight glow filter to texture
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            
+            const logoSize = 6;
+            const logoGeometry = new THREE.PlaneGeometry(logoSize, logoSize); // Plane matches image better
             const logoMaterial = new THREE.MeshBasicMaterial({
                 map: texture,
                 transparent: true,
-                opacity: 0.9,
-                side: THREE.DoubleSide
+                opacity: 1,
+                side: THREE.DoubleSide,
+                depthTest: false // Always visible inside
             });
 
             const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-            logo.position.set(0, 0, 0);
+            logo.renderOrder = 1; // Force render on top of inner wires
             scene.add(logo);
 
-            // Swimming animation for logo
-            logo.userData.animate = () => {
-                const time = Date.now() * 0.001;
-                logo.position.x = Math.sin(time * 0.5) * 3;
-                logo.position.y = Math.sin(time * 0.7) * 2;
-                logo.position.z = Math.cos(time * 0.3) * 3;
-                logo.rotation.y = Math.sin(time * 0.2) * 0.3;
-                logo.rotation.x = Math.cos(time * 0.3) * 0.2;
+            // Floating Animation
+            logo.userData.animate = (time) => {
+                logo.position.y = Math.sin(time * 1.5) * 0.5;
+                logo.rotation.y = Math.sin(time * 0.5) * 0.1;
             };
 
             window.logoMesh = logo;
-            console.log('✅ Logo texture loaded successfully');
-        },
-        // Progress callback
-        undefined,
-        // Error callback - FALLBACK
-        (error) => {
-            console.warn('⚠️ Logo texture failed to load, using fallback:', error);
-
-            // Create a fallback golden circle with "E" text
-            const fallbackGeometry = new THREE.CircleGeometry(4, 64);
-            const fallbackMaterial = new THREE.MeshBasicMaterial({
-                color: 0xFFC222,
-                transparent: true,
-                opacity: 0.8,
-                side: THREE.DoubleSide
-            });
-
-            const fallbackLogo = new THREE.Mesh(fallbackGeometry, fallbackMaterial);
-            fallbackLogo.position.set(0, 0, 0);
-            scene.add(fallbackLogo);
-
-            // Swimming animation
-            fallbackLogo.userData.animate = () => {
-                const time = Date.now() * 0.001;
-                fallbackLogo.position.x = Math.sin(time * 0.5) * 3;
-                fallbackLogo.position.y = Math.sin(time * 0.7) * 2;
-                fallbackLogo.position.z = Math.cos(time * 0.3) * 3;
-                fallbackLogo.rotation.y = Math.sin(time * 0.2) * 0.3;
-            };
-
-            window.logoMesh = fallbackLogo;
         }
     );
 
-    // Outer rings
-    const ring1Geometry = new THREE.RingGeometry(18, 18.2, 64);
-    const ring1Material = new THREE.MeshBasicMaterial({
-        color: 0xFFC222,
-        transparent: true,
-        opacity: 0.4,
-        side: THREE.DoubleSide
-    });
-    const ring1 = new THREE.Mesh(ring1Geometry, ring1Material);
-    ring1.rotation.x = Math.PI / 2;
-    scene.add(ring1);
+    camera.position.z = 35;
 
-    const ring2 = new THREE.Mesh(
-        new THREE.RingGeometry(22, 22.1, 64),
-        new THREE.MeshBasicMaterial({
-            color: 0xFFC222,
-            transparent: true,
-            opacity: 0.2,
-            side: THREE.DoubleSide
-        })
-    );
-    ring2.rotation.x = Math.PI / 3;
-    ring2.rotation.y = Math.PI / 6;
-    scene.add(ring2);
-
-    // Particle points around globe
-    const dotsCount = 500;
-    const dotsGeometry = new THREE.BufferGeometry();
-    const dotsPositions = new Float32Array(dotsCount * 3);
-
-    for (let i = 0; i < dotsCount; i++) {
-        const radius = 16 + Math.random() * 8;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos((Math.random() * 2) - 1);
-
-        dotsPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-        dotsPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-        dotsPositions[i * 3 + 2] = radius * Math.cos(phi);
-    }
-
-    dotsGeometry.setAttribute('position', new THREE.BufferAttribute(dotsPositions, 3));
-
-    const dotsMaterial = new THREE.PointsMaterial({
-        size: 0.3,
-        color: 0xFFC222,
-        transparent: true,
-        opacity: 0.8,
-        blending: THREE.AdditiveBlending
-    });
-
-    const dots = new THREE.Points(dotsGeometry, dotsMaterial);
-    scene.add(dots);
-
-    camera.position.z = 40;
-
-    // Mouse tracking for interactive rotation
+    // Mouse Interaction
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
 
-    document.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
+
+    document.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX - windowHalfX) * 0.001;
+        mouseY = (event.clientY - windowHalfY) * 0.001;
     });
 
-    // Animation loop
+    // Animate
     const clock = new THREE.Clock();
 
     function animate() {
         requestAnimationFrame(animate);
+        const delta = clock.getDelta();
+        const time = clock.getElapsedTime();
 
-        const elapsed = clock.getElapsedTime();
+        targetX = mouseX * 0.5;
+        targetY = mouseY * 0.5;
 
-        // Smooth mouse following
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
+        // Rotate Group
+        coreSphere.rotation.y += 0.005;
+        coreSphere.rotation.x += 0.002;
 
-        // Rotate elements
-        globe.rotation.y = elapsed * 0.1 + targetX * 0.5;
-        globe.rotation.x = targetY * 0.3;
+        shell.rotation.y -= 0.003;
+        shell.rotation.x -= 0.001;
 
-        innerSphere.rotation.y = elapsed * 0.05;
+        particleSystem.rotation.y += 0.002;
 
-        ring1.rotation.z = elapsed * 0.2;
-        ring2.rotation.z = -elapsed * 0.15;
+        // Interactive tilt
+        scene.rotation.y += 0.05 * (targetX - scene.rotation.y);
+        scene.rotation.x += 0.05 * (targetY - scene.rotation.x);
 
-        dots.rotation.y = elapsed * 0.08 + targetX * 0.3;
-        dots.rotation.x = targetY * 0.2;
+        // Animate Rings
+        orbitRing.rotation.z += 0.002;
+        orbitRing2.rotation.z -= 0.003;
 
-        // Animate logo swimming
+        // Logo Animation
         if (window.logoMesh && window.logoMesh.userData.animate) {
-            window.logoMesh.userData.animate();
+            window.logoMesh.userData.animate(time);
         }
 
-        // Breathing effect
-        const breathe = Math.sin(elapsed * 0.5) * 0.1 + 1;
-        globe.scale.set(breathe, breathe, breathe);
+        // Pulse Effect
+        const scale = 1 + Math.sin(time * 1.5) * 0.03;
+        coreSphere.scale.set(scale, scale, scale);
 
         renderer.render(scene, camera);
     }
 
     animate();
 
-    // Resize handler
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    console.log('🌍 Hero globe initialized with error handling');
+    console.log('🌍 Digital Biosphere Initialized');
 }

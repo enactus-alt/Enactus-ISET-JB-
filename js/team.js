@@ -19,18 +19,32 @@ export default function initTeam() {
     `;
     container.insertBefore(svg, container.firstChild);
 
-    function drawConnections() {
-        svg.innerHTML = '';
-        const positions = [];
+    // Create lines pool to reuse elements
+    const linesPool = [];
+    const maxLines = 50;
+    for (let i = 0; i < maxLines; i++) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.style.opacity = '0';
+        svg.appendChild(line);
+        linesPool.push(line);
+    }
 
+    function animateConnections() {
+        requestAnimationFrame(animateConnections);
+
+        const positions = [];
+        const containerRect = container.getBoundingClientRect();
+
+        // Get current positions (updated by GSAP)
         avatars.forEach(avatar => {
             const rect = avatar.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
             positions.push({
                 x: rect.left - containerRect.left + rect.width / 2,
                 y: rect.top - containerRect.top + rect.height / 2
             });
         });
+
+        let lineIdx = 0;
 
         // Draw lines between nearby avatars
         for (let i = 0; i < positions.length; i++) {
@@ -40,23 +54,30 @@ export default function initTeam() {
                     positions[i].y - positions[j].y
                 );
 
-                if (dist < 350) {
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                if (dist < 350 && lineIdx < maxLines) {
+                    const line = linesPool[lineIdx];
                     line.setAttribute('x1', positions[i].x);
                     line.setAttribute('y1', positions[i].y);
                     line.setAttribute('x2', positions[j].x);
                     line.setAttribute('y2', positions[j].y);
                     line.setAttribute('stroke', '#FFC222');
                     line.setAttribute('stroke-width', '1');
-                    line.setAttribute('stroke-opacity', (1 - dist / 350) * 0.3);
-                    svg.appendChild(line);
+
+                    // Dynamic opacity based on distance
+                    line.style.opacity = (1 - dist / 350) * 0.4;
+
+                    lineIdx++;
                 }
             }
         }
+
+        // Hide unused lines
+        for (let k = lineIdx; k < maxLines; k++) {
+            linesPool[k].style.opacity = '0';
+        }
     }
 
-    drawConnections();
-    window.addEventListener('resize', drawConnections);
+    animateConnections();
 
     // ═══════════════════════════════════════════════════════════
     // FLOATING ANIMATION

@@ -141,5 +141,45 @@ export default function initProjects() {
         );
     });
 
-    console.log('📊 Projects section initialized');
+    // ═══════════════════════════════════════════════════════════
+    // 3D TILT HOLOGRAPHIC EFFECT
+    // ═══════════════════════════════════════════════════════════
+    projectItems.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -5; // Max 5deg rotation
+            const rotateY = ((x - centerX) / centerX) * 5;
+
+            gsap.to(card, {
+                transformPerspective: 1000,
+                rotationX: rotateX,
+                rotationY: rotateY,
+                scale: 1.02,
+                duration: 0.4,
+                ease: 'power2.out'
+            });
+
+            // Shine effect
+            // We can assume a .shine element exists or add it dynamically if we want advanced effects
+            // For now, simpler tilt is sufficient for "Holographic" feel combined with CSS border glow
+        });
+
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                rotationX: 0,
+                rotationY: 0,
+                scale: 1,
+                duration: 0.7,
+                ease: 'elastic.out(1, 0.5)'
+            });
+        });
+    });
+
+    console.log('📊 Projects section initialized with 3D Tilt');
 }
