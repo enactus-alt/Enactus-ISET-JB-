@@ -1482,3 +1482,7 @@ body.cursor-hover .cursor-ring {
         display: none;
     }
 }
+/* Floating button hidden on desktop */
+.floating-join-btn {
+    display: none;
+}

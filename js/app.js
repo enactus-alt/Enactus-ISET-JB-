@@ -7,7 +7,6 @@ import initMission from './mission.js';
 import initTeam from './team.js';
 import initProjects from './projects.js';
 import initContact from './contact.js';
-import './nav.js';
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', () => {
