@@ -177,33 +177,62 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-             HERO SECTION — Clean, Professional, Informative
+             HERO SECTION — Modern Video Background with Overlay
         ═══════════════════════════════════════════════════════════ -->
-        <section id="home" class="hero-section">
-            <div class="hero-content">
-                <div class="hero-badge">Enactus ISET Djerba</div>
-                <h1 class="hero-title">We See <span class="highlight">Opportunity</span></h1>
-                <p class="hero-description">
-                    Enactus is the world's largest experiential learning platform dedicated to creating a better world
-                    while developing the next generation of entrepreneurial leaders and social innovators.
-                </p>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">36</span>
-                        <span class="stat-label">Countries</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">72K+</span>
-                        <span class="stat-label">Students</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">1,730</span>
-                        <span class="stat-label">Campuses</span>
-                    </div>
-                </div>
-                <a href="#projects" class="hero-cta">Discover Our Impact ↓</a>
+<section id="home" class="hero-section">
+    <!-- Background Video -->
+    <div class="hero-video-container">
+        <video 
+            id="hero-video" 
+            class="hero-video" 
+            autoplay
+            muted 
+            loop
+            playsinline
+            preload="auto"
+            poster="assets/img/hero-poster.jpg"
+            width="1920"
+            height="1080">
+            <source src="assets/videos/hero-bg.mp4" type="video/mp4">
+            <source src="assets/videos/hero-bg.webm" type="video/webm">
+        </video>
+        <div class="hero-video-overlay"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+        <div class="hero-badge">Enactus ISET Djerba</div>
+        <h1 class="hero-title">We Build <span class="highlight">Digital</span></h1>
+        <p class="hero-description">
+            Empowering students through entrepreneurial action to create sustainable solutions that transform lives and shape a better tomorrow.
+        </p>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">36</span>
+                <span class="stat-label">Countries</span>
             </div>
-        </section>
+            <div class="stat-item">
+                <span class="stat-number">72K+</span>
+                <span class="stat-label">Students</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1,730</span>
+                <span class="stat-label">Campuses</span>
+            </div>
+        </div>
+        <a href="#projects" class="hero-cta">Discover Our Impact ↓</a>
+    </div>
+
+    <!-- Video End Loader Animation -->
+    <div class="video-end-loader" id="video-end-loader">
+        <div class="loader-dots">
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <span class="loader-text">Loading</span>
+        </div>
+    </div>
+</section>
 
         <!-- ═══════════════════════════════════════════════════════════
              ABOUT SECTION — Who is Enactus
@@ -307,21 +336,13 @@
             <h2 class="section-title reveal">Our Team</h2>
             <p class="section-subtitle reveal">The people driving our mission forward</p>
             <div id="team-container" class="team-grid">
-                <!-- Souhaib Thabti - TL -->
+                
+                <!-- Baraa Ounali - TL -->
                 <div class="team-avatar">
-                    <img src="assets/img/souhaib_thabti.jpg" alt="Souhaib Thabti">
+                    <img src="assets/img/baraa_ounali.jpg" alt="baraa_ounali">
                     <div class="avatar-info">
-                        <h4>Souhaib Thabti</h4>
+                        <h4>Baraa Ounali</h4>
                         <p>Team Leader</p>
-                    </div>
-                </div>
-
-                <!-- Cyrine Chayeb - Media Manager -->
-                <div class="team-avatar">
-                    <img src="assets/img/cyrine_chayeb.jpg" alt="Cyrine Chayeb">
-                    <div class="avatar-info">
-                        <h4>Cyrine Chayeb</h4>
-                        <p>Media Manager</p>
                     </div>
                 </div>
 
@@ -334,15 +355,33 @@
                     </div>
                 </div>
 
-                <!-- Baraa Ounali - HR & Training Manager -->
+                <!-- Sirine Zitouni - Secretaire Generale -->
                 <div class="team-avatar">
-                    <img src="assets/img/baraa_ounali.jpg" alt="Baraa Ounali">
+                    <img src="assets/img/sirine_zitouni.jpg" alt="Sirine Zitouni">
                     <div class="avatar-info">
-                        <h4>Baraa Ounali</h4>
+                        <h4>Sirine Zitouni</h4>
+                        <p>Secretary General</p>
+                    </div>
+                </div>
+
+                <!-- Ayoub kchaou - HR & Training Manager -->
+                <div class="team-avatar">
+                    <img src="assets/img/ayoub_kchaou.jpeg" alt="Ayoub kchaou">
+                    <div class="avatar-info">
+                        <h4>Ayoub kchaou</h4>
                         <p>HR & Training Manager</p>
                     </div>
                 </div>
 
+                <!-- Bedis_Jaballah - Media Manager -->
+                <div class="team-avatar">
+                    <img src="assets/img/Bedis_Jaballah.jpg" alt="Bedis_Jaballah">
+                    <div class="avatar-info">
+                        <h4>Bedis_Jaballah</h4>
+                        <p>Media Manager</p>
+                    </div>
+                </div>
+                
                 <!-- Khalil Dhen - Event Manager -->
                 <div class="team-avatar">
                     <img src="assets/img/khalil_dhen.jpg" alt="Khalil Dhen">
@@ -360,16 +399,7 @@
                         <p>Financial Manager & Treasurer</p>
                     </div>
                 </div>
-
-                <!-- Sirine Zitouni - Secretaire Generale -->
-                <div class="team-avatar">
-                    <img src="assets/img/sirine_zitouni.jpg" alt="Sirine Zitouni">
-                    <div class="avatar-info">
-                        <h4>Sirine Zitouni</h4>
-                        <p>Secretary General</p>
-                    </div>
-                </div>
-            </div>
+                
         </section>
 
         <!-- ═══════════════════════════════════════════════════════════
@@ -504,7 +534,7 @@
                 </a>
             </div>
 
-            <p class="footer-copy">&copy; 2026 Enactus ISET Djerba BY OA-DEV</p>
+            <p class="footer-copy">&copy; 2026 Enactus ISET Djerba BY BMS-DEV and OA-DEV</p>
         </footer>
     </main>
 
