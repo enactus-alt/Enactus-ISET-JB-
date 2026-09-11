@@ -1,14 +1,12 @@
 // ═══════════════════════════════════════════════════════════
 //   ENACTUS ISET DJERBA — Lightweight App (No Dependencies)
-//   All modules bundled into one file to avoid CORS issues
-//   when opening file:// directly.
 // ═══════════════════════════════════════════════════════════
 
 (function () {
     'use strict';
 
     // ─────────────────────────────────────────────────────────
-    //  NAVIGATION
+    // NAVIGATION
     // ─────────────────────────────────────────────────────────
     function initNavigation() {
         const hamburger = document.getElementById('hamburger');
@@ -40,6 +38,7 @@
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 closeMobileMenu();
+
                 const targetId = link.getAttribute('href');
                 if (targetId && targetId.startsWith('#')) {
                     const targetSection = document.querySelector(targetId);
@@ -54,44 +53,44 @@
 
         function handleScroll() {
             if (nav) {
-                if (window.scrollY > 50) {
-                    nav.classList.add('scrolled');
-                } else {
-                    nav.classList.remove('scrolled');
-                }
+                nav.classList.toggle('scrolled', window.scrollY > 50);
             }
         }
 
         function updateActiveLink() {
             const sections = document.querySelectorAll('section[id]');
             const scrollPosition = window.scrollY + 150;
+
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                const sectionId = section.getAttribute('id');
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                const id = section.getAttribute('id');
+
+                if (scrollPosition >= top && scrollPosition < top + height) {
                     navLinks.forEach(link => link.classList.remove('active'));
-                    document.querySelectorAll(`.nav-link[data-section="${sectionId}"], .mobile-link[data-section="${sectionId}"]`)
-                        .forEach(link => link.classList.add('active'));
+
+                    document.querySelectorAll(
+                        `.nav-link[data-section="${id}"], .mobile-link[data-section="${id}"]`
+                    ).forEach(link => link.classList.add('active'));
                 }
             });
         }
 
-        let scrollTimeout;
+        let ticking = false;
+
         window.addEventListener('scroll', () => {
-            if (!scrollTimeout) {
-                scrollTimeout = setTimeout(() => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
                     handleScroll();
                     updateActiveLink();
-                    scrollTimeout = null;
-                }, 30);
+                    ticking = false;
+                });
+                ticking = true;
             }
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
-                closeMobileMenu();
-            }
+            if (e.key === 'Escape') closeMobileMenu();
         });
 
         handleScroll();
@@ -99,27 +98,24 @@
     }
 
     // ─────────────────────────────────────────────────────────
-    //  UI — Scroll Reveal & Smooth Anchors
+    // UI
     // ─────────────────────────────────────────────────────────
     function initUI() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
+                entry.target.classList.toggle('visible', entry.isIntersecting);
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.glass-card, .section-title, .project-item, .reveal, .highlight-item').forEach(el => {
-            observer.observe(el);
-        });
+        document.querySelectorAll(
+            '.glass-card, .section-title, .project-item, .reveal, .highlight-item'
+        ).forEach(el => observer.observe(el));
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
-                const targetId = anchor.getAttribute('href').substring(1);
-                const target = document.getElementById(targetId);
+                const id = anchor.getAttribute('href').substring(1);
+                const target = document.getElementById(id);
+
                 if (target) {
                     e.preventDefault();
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -129,118 +125,164 @@
     }
 
     // ─────────────────────────────────────────────────────────
-    //  MISSION — Staggered Card Reveal
+    // MISSION
     // ─────────────────────────────────────────────────────────
     function initMission() {
         const cards = document.querySelectorAll('.mission-card');
-        if (cards.length === 0) return;
+        if (!cards.length) return;
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
+                entry.target.classList.toggle('visible', entry.isIntersecting);
             });
         }, { threshold: 0.15 });
 
-        cards.forEach((card, index) => {
-            card.style.transitionDelay = `${index * 0.15}s`;
+        cards.forEach((card, i) => {
+            card.style.transitionDelay = `${i * 0.15}s`;
             observer.observe(card);
         });
     }
 
     // ─────────────────────────────────────────────────────────
-    //  TEAM — Staggered Avatar Reveal
+    // TEAM
     // ─────────────────────────────────────────────────────────
     function initTeam() {
         const avatars = document.querySelectorAll('.team-avatar');
-        if (avatars.length === 0) return;
+        if (!avatars.length) return;
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
+                entry.target.classList.toggle('visible', entry.isIntersecting);
             });
         }, { threshold: 0.1 });
 
-        avatars.forEach((avatar, index) => {
-            avatar.style.transitionDelay = `${index * 0.1}s`;
+        avatars.forEach((avatar, i) => {
+            avatar.style.transitionDelay = `${i * 0.1}s`;
             observer.observe(avatar);
         });
     }
 
     // ─────────────────────────────────────────────────────────
-    //  PROJECTS — Reveal + Before/After Slider
+    // PROJECTS + SLIDER
     // ─────────────────────────────────────────────────────────
     function initProjects() {
-        const projectItems = document.querySelectorAll('.project-item');
+        const items = document.querySelectorAll('.project-item');
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
+                entry.target.classList.toggle('visible', entry.isIntersecting);
             });
         }, { threshold: 0.1 });
 
-        projectItems.forEach((item, index) => {
-            item.style.transitionDelay = `${index * 0.2}s`;
+        items.forEach((item, i) => {
+            item.style.transitionDelay = `${i * 0.2}s`;
             observer.observe(item);
         });
 
-        // Before/After Slider — Pure vanilla JS
         document.querySelectorAll('.ba-slider').forEach(slider => {
             const handle = slider.querySelector('.ba-handle');
-            const beforeImg = slider.querySelector('.ba-before');
-            if (!handle || !beforeImg) return;
+            const before = slider.querySelector('.ba-before');
+            if (!handle || !before) return;
 
-            let isDragging = false;
+            let dragging = false;
 
-            const updateSlider = (x) => {
+            const update = (x) => {
                 const rect = slider.getBoundingClientRect();
                 let percent = ((x - rect.left) / rect.width) * 100;
                 percent = Math.max(0, Math.min(100, percent));
-                beforeImg.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+
+                before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
                 handle.style.left = `${percent}%`;
             };
 
-            slider.addEventListener('mousedown', (e) => { isDragging = true; updateSlider(e.clientX); });
-            window.addEventListener('mousemove', (e) => { if (isDragging) updateSlider(e.clientX); });
-            window.addEventListener('mouseup', () => { isDragging = false; });
+            slider.addEventListener('mousedown', e => {
+                dragging = true;
+                update(e.clientX);
+            });
 
-            slider.addEventListener('touchstart', (e) => { isDragging = true; updateSlider(e.touches[0].clientX); }, { passive: true });
-            window.addEventListener('touchmove', (e) => { if (isDragging) updateSlider(e.touches[0].clientX); }, { passive: true });
-            window.addEventListener('touchend', () => { isDragging = false; });
+            window.addEventListener('mousemove', e => {
+                if (dragging) update(e.clientX);
+            });
+
+            window.addEventListener('mouseup', () => dragging = false);
+
+            slider.addEventListener('touchstart', e => {
+                dragging = true;
+                update(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener('touchmove', e => {
+                if (dragging) update(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => dragging = false);
         });
     }
 
     // ─────────────────────────────────────────────────────────
-    //  BOOT
+    // BOOT
     // ─────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
-        // Preloader fade-out
-        const preloader = document.getElementById('preloader');
-        if (preloader) {
-            setTimeout(() => {
-                preloader.classList.add('loaded');
-                setTimeout(() => { preloader.style.display = 'none'; }, 500);
-            }, 600);
-        }
-
         initNavigation();
         initUI();
         initMission();
         initTeam();
         initProjects();
 
-        console.log('✅ Enactus site ready — zero heavy dependencies');
+        const preloader = document.getElementById('preloader');
+        const heroVideo = document.getElementById('hero-video');
+
+        // PRELOADER
+        setTimeout(() => {
+            if (preloader) {
+                preloader.classList.add('loaded');
+                setTimeout(() => preloader.style.display = 'none', 400);
+            }
+        }, 800);
+
+        // HERO VIDEO FIX
+        if (heroVideo) {
+            const tryPlay = () => {
+                heroVideo.muted = true;
+
+                const playPromise = heroVideo.play();
+                if (playPromise) {
+                    playPromise
+                        .then(() => heroVideo.classList.add('loaded'))
+                        .catch(() => heroVideo.style.display = 'none');
+                }
+            };
+
+            if (heroVideo.readyState >= 3) {
+                tryPlay();
+            } else {
+                heroVideo.addEventListener('canplay', tryPlay, { once: true });
+            }
+
+            heroVideo.addEventListener('play', () => {
+                heroVideo.classList.add('loaded');
+            }, { once: true });
+
+            heroVideo.addEventListener('ended', () => {
+                heroVideo.pause();
+
+                const loader = document.getElementById('video-end-loader');
+                if (loader) {
+                    loader.style.display = 'flex';
+
+                    setTimeout(() => {
+                        loader.classList.add('hidden');
+
+                        setTimeout(() => {
+                            loader.style.display = 'none';
+                        }, 500);
+
+                    }, 3500);
+                }
+            });
+        }
+
+        console.log('✅ Enactus site ready — optimized version');
     });
 
 })();
