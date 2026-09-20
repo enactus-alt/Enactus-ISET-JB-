@@ -67,6 +67,8 @@ body::before {
     top: 10px;
 }
 
+
+
 /* ═══════════════════════════════════════════════════════════
    PRELOADER — Pure CSS
 ═══════════════════════════════════════════════════════════ */
@@ -366,6 +368,33 @@ body::before {
     transform: rotate(-45deg);
 }
 
+/* HERO ACTIONS */
+.hero-actions {
+    width: 100%;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.hero-actions .hero-cta-primary {
+    min-width: 0;
+    padding: 0.9rem 1.35rem;
+    font-size: 0.72rem;
+}
+
+.hero-actions .hero-cta-secondary {
+    min-width: 0;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.68rem;
+}
+
+.hero-or {
+    font-size: 0.55rem;
+}
+
+.hero-or::before,
+.hero-or::after {
+    width: 10px;
+}
 /* ═══════════════════════════════════════════════════════════
    MOBILE OVERLAY & MENU
 ═══════════════════════════════════════════════════════════ */
@@ -546,6 +575,8 @@ body::before {
     font-weight: 700;
     letter-spacing: 1.5px;
 }
+
+
 
 /* ═══════════════════════════════════════════════════════════
    HERO SECTION — Video Background with Modern Overlay
@@ -865,6 +896,7 @@ body::before {
     max-width: 600px;
 }
 
+
 /* ═══════════════════════════════════════════════════════════
    HERO ACTIONS — Apply + Discover
 ═══════════════════════════════════════════════════════════ */
@@ -994,36 +1026,6 @@ body::before {
 .hero-cta-secondary:hover .cta-arrow {
     transform: translateY(3px);
 }
-
-
-/* HERO ACTIONS */
-.hero-actions {
-    width: 100%;
-    gap: 0.65rem;
-    flex-wrap: wrap;
-}
-
-.hero-actions .hero-cta-primary {
-    min-width: 0;
-    padding: 0.9rem 1.35rem;
-    font-size: 0.72rem;
-}
-
-.hero-actions .hero-cta-secondary {
-    min-width: 0;
-    padding: 0.9rem 1.2rem;
-    font-size: 0.68rem;
-}
-
-.hero-or {
-    font-size: 0.55rem;
-}
-
-.hero-or::before,
-.hero-or::after {
-    width: 10px;
-}
-
 
 /* ═══════════════════════════════════════════════════════════
    SCROLL ANIMATIONS — Varied, Smooth CSS-only
