@@ -866,6 +866,166 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   HERO ACTIONS — Apply + Discover
+═══════════════════════════════════════════════════════════ */
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: ctaFadeIn 1s ease-out 0.5s both;
+}
+
+.hero-actions .hero-cta {
+    animation: none;
+    margin: 0;
+}
+
+/* Primary — Apply Now */
+.hero-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1.15rem 2rem;
+    min-width: 180px;
+
+    background: var(--color-gold);
+    color: #050505;
+
+    border: 1px solid var(--color-gold);
+    border-radius: 50px;
+
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+
+    box-shadow: 0 10px 30px rgba(255, 194, 34, 0.25);
+
+    transition:
+        transform 0.3s var(--ease-smooth),
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+.hero-cta-primary:hover {
+    background: #FFD966;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(255, 194, 34, 0.4);
+}
+
+.hero-cta-primary .cta-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.hero-cta-primary:hover .cta-arrow {
+    transform: translate(3px, -3px);
+}
+
+
+/* OR separator */
+.hero-or {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    color: rgba(255, 255, 255, 0.35);
+
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+}
+
+.hero-or::before,
+.hero-or::after {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+
+/* Secondary — Discover */
+.hero-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+
+    padding: 1.15rem 1.6rem;
+
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.85);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50px;
+
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-decoration: none;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    transition:
+        transform 0.3s var(--ease-smooth),
+        border-color 0.3s ease,
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+.hero-cta-secondary:hover {
+    background: rgba(255, 194, 34, 0.08);
+    border-color: rgba(255, 194, 34, 0.5);
+    color: var(--color-gold);
+    transform: translateY(-4px);
+}
+
+.hero-cta-secondary .cta-arrow {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.hero-cta-secondary:hover .cta-arrow {
+    transform: translateY(3px);
+}
+
+
+/* HERO ACTIONS */
+.hero-actions {
+    width: 100%;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.hero-actions .hero-cta-primary {
+    min-width: 0;
+    padding: 0.9rem 1.35rem;
+    font-size: 0.72rem;
+}
+
+.hero-actions .hero-cta-secondary {
+    min-width: 0;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.68rem;
+}
+
+.hero-or {
+    font-size: 0.55rem;
+}
+
+.hero-or::before,
+.hero-or::after {
+    width: 10px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
    SCROLL ANIMATIONS — Varied, Smooth CSS-only
 ═══════════════════════════════════════════════════════════ */
 
