@@ -1,288 +1,254 @@
 // ═══════════════════════════════════════════════════════════
-//   ENACTUS ISET DJERBA — Lightweight App (No Dependencies)
+//   ENACTUS ISET DJERBA — app.js (cleaned, no dependencies)
+//
+//   1. Helpers
+//   2. Navigation (menu, smooth scroll, active link)
+//   3. Scroll reveal
+//   4. Team cards (touch / keyboard)
+//   5. Before / after sliders
+//   6. Preloader + hero video
+//   7. Boot
 // ═══════════════════════════════════════════════════════════
 
-(function () {
+(() => {
     'use strict';
 
     // ─────────────────────────────────────────────────────────
-    // NAVIGATION
+    // 1. HELPERS
+    // ─────────────────────────────────────────────────────────
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+    // True on real mouse devices. There, the team cards open with CSS :hover.
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    // ─────────────────────────────────────────────────────────
+    // 2. NAVIGATION
     // ─────────────────────────────────────────────────────────
     function initNavigation() {
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileOverlay = document.getElementById('mobile-overlay');
-        const nav = document.getElementById('premium-nav');
-        const navLinks = document.querySelectorAll('.nav-link, .mobile-link');
+        const nav = $('#premium-nav');
+        const hamburger = $('#hamburger');
+        const menu = $('#mobile-menu');
+        const overlay = $('#mobile-overlay');
+        const links = $$('.nav-link, .mobile-link');
+        const sections = $$('section[id]');
 
-        function toggleMobileMenu() {
-            const isOpen = hamburger.classList.contains('active');
-            hamburger.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-            mobileOverlay.classList.toggle('active');
-            document.body.style.overflow = isOpen ? '' : 'hidden';
-            hamburger.setAttribute('aria-expanded', !isOpen);
-        }
+        const setMenu = (open) => {
+            hamburger?.classList.toggle('active', open);
+            menu?.classList.toggle('active', open);
+            overlay?.classList.toggle('active', open);
+            hamburger?.setAttribute('aria-expanded', String(open));
+            document.body.style.overflow = open ? 'hidden' : '';
+        };
 
-        function closeMobileMenu() {
-            hamburger.classList.remove('active');
-            mobileMenu.classList.remove('active');
-            mobileOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            hamburger.setAttribute('aria-expanded', 'false');
-        }
+        hamburger?.addEventListener('click', () => setMenu(!menu.classList.contains('active')));
+        overlay?.addEventListener('click', () => setMenu(false));
 
-        if (hamburger) hamburger.addEventListener('click', toggleMobileMenu);
-        if (mobileOverlay) mobileOverlay.addEventListener('click', closeMobileMenu);
+        // One handler for every in-page link: close the menu, then scroll smoothly.
+        $$('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener('click', (event) => {
+                const target = document.getElementById(anchor.getAttribute('href').slice(1));
+                if (!target) return;
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                closeMobileMenu();
-
-                const targetId = link.getAttribute('href');
-                if (targetId && targetId.startsWith('#')) {
-                    const targetSection = document.querySelector(targetId);
-                    if (targetSection) {
-                        setTimeout(() => {
-                            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }, 100);
-                    }
-                }
+                event.preventDefault();
+                setMenu(false);
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
 
-        function handleScroll() {
-            if (nav) {
-                nav.classList.toggle('scrolled', window.scrollY > 50);
-            }
-        }
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setMenu(false);
+        });
 
-        function updateActiveLink() {
-            const sections = document.querySelectorAll('section[id]');
-            const scrollPosition = window.scrollY + 150;
-
-            sections.forEach(section => {
-                const top = section.offsetTop;
-                const height = section.offsetHeight;
-                const id = section.getAttribute('id');
-
-                if (scrollPosition >= top && scrollPosition < top + height) {
-                    navLinks.forEach(link => link.classList.remove('active'));
-
-                    document.querySelectorAll(
-                        `.nav-link[data-section="${id}"], .mobile-link[data-section="${id}"]`
-                    ).forEach(link => link.classList.add('active'));
-                }
-            });
-        }
-
+        // Scroll state: "scrolled" nav + highlighted link (throttled with rAF)
         let ticking = false;
 
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    handleScroll();
-                    updateActiveLink();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+        const onScroll = () => {
+            if (ticking) return;
+            ticking = true;
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeMobileMenu();
-        });
+            requestAnimationFrame(() => {
+                nav?.classList.toggle('scrolled', window.scrollY > 50);
 
-        handleScroll();
-        updateActiveLink();
+                const position = window.scrollY + 150;
+                const current = sections.find(
+                    (section) => position >= section.offsetTop && position < section.offsetTop + section.offsetHeight
+                );
+
+                if (current) {
+                    links.forEach((link) => link.classList.toggle('active', link.dataset.section === current.id));
+                }
+
+                ticking = false;
+            });
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
     }
 
     // ─────────────────────────────────────────────────────────
-    // UI
+    // 3. SCROLL REVEAL
+    //    One observer for everything: adds/removes `.visible`.
     // ─────────────────────────────────────────────────────────
-    function initUI() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                entry.target.classList.toggle('visible', entry.isIntersecting);
+    function initReveal() {
+        const observer = new IntersectionObserver(
+            (entries) => entries.forEach((entry) => entry.target.classList.toggle('visible', entry.isIntersecting)),
+            { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        // Staggered entrance: [selector, delay step in seconds]
+        [
+            ['.mission-card', 0.15],
+            ['.team-avatar', 0.1],
+            ['.project-item', 0.2],
+        ].forEach(([selector, step]) => {
+            $$(selector).forEach((el, i) => {
+                el.style.transitionDelay = `${i * step}s`;
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        });
 
-        document.querySelectorAll(
-            '.glass-card, .section-title, .project-item, .reveal, .highlight-item'
-        ).forEach(el => observer.observe(el));
+        $$('.glass-card, .section-title, .project-item, .reveal, .highlight-item, .team-avatar')
+            .forEach((el) => observer.observe(el));
+    }
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
-                const id = anchor.getAttribute('href').substring(1);
-                const target = document.getElementById(id);
+    // ─────────────────────────────────────────────────────────
+    // 4. TEAM CARDS
+    //    Mouse  → pure CSS :hover
+    //    Touch  → tap toggles `.is-open` (one card at a time)
+    //    Keys   → CSS :focus-visible, Enter/Space toggles on touch devices
+    // ─────────────────────────────────────────────────────────
+    function initTeam() {
+        const cards = $$('.team-avatar');
+        if (!cards.length) return;
 
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        let openCard = null;
+
+        const close = () => {
+            openCard?.classList.remove('is-open');
+            openCard = null;
+        };
+
+        const toggle = (card) => {
+            const wasOpen = openCard === card;
+            close();
+
+            if (!wasOpen) {
+                card.classList.add('is-open');
+                openCard = card;
+            }
+        };
+
+        cards.forEach((card) => {
+            card.addEventListener('click', () => {
+                if (!canHover.matches) toggle(card);
+            });
+
+            card.addEventListener('keydown', (event) => {
+                if (canHover.matches) return;
+
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggle(card);
                 }
             });
         });
-    }
 
-    // ─────────────────────────────────────────────────────────
-    // MISSION
-    // ─────────────────────────────────────────────────────────
-    function initMission() {
-        const cards = document.querySelectorAll('.mission-card');
-        if (!cards.length) return;
+        // Tap anywhere else closes the open card
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.team-avatar')) close();
+        });
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                entry.target.classList.toggle('visible', entry.isIntersecting);
-            });
-        }, { threshold: 0.15 });
-
-        cards.forEach((card, i) => {
-            card.style.transitionDelay = `${i * 0.15}s`;
-            observer.observe(card);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') close();
         });
     }
 
     // ─────────────────────────────────────────────────────────
-    // TEAM
+    // 5. BEFORE / AFTER SLIDERS
     // ─────────────────────────────────────────────────────────
-    function initTeam() {
-        const avatars = document.querySelectorAll('.team-avatar');
-        if (!avatars.length) return;
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                entry.target.classList.toggle('visible', entry.isIntersecting);
-            });
-        }, { threshold: 0.1 });
-
-        avatars.forEach((avatar, i) => {
-            avatar.style.transitionDelay = `${i * 0.1}s`;
-            observer.observe(avatar);
-        });
-    }
-
-    // ─────────────────────────────────────────────────────────
-    // PROJECTS + SLIDER
-    // ─────────────────────────────────────────────────────────
-    function initProjects() {
-        const items = document.querySelectorAll('.project-item');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                entry.target.classList.toggle('visible', entry.isIntersecting);
-            });
-        }, { threshold: 0.1 });
-
-        items.forEach((item, i) => {
-            item.style.transitionDelay = `${i * 0.2}s`;
-            observer.observe(item);
-        });
-
-        document.querySelectorAll('.ba-slider').forEach(slider => {
-            const handle = slider.querySelector('.ba-handle');
-            const before = slider.querySelector('.ba-before');
-            if (!handle || !before) return;
+    function initCompareSliders() {
+        $$('.ba-slider').forEach((slider) => {
+            const before = $('.ba-before', slider);
+            const handle = $('.ba-handle', slider);
+            if (!before || !handle) return; // e.g. the single-image EDUCARE+ slider
 
             let dragging = false;
 
-            const update = (x) => {
+            const update = (clientX) => {
                 const rect = slider.getBoundingClientRect();
-                let percent = ((x - rect.left) / rect.width) * 100;
-                percent = Math.max(0, Math.min(100, percent));
+                const percent = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
 
                 before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
                 handle.style.left = `${percent}%`;
             };
 
-            slider.addEventListener('mousedown', e => {
+            const stop = () => { dragging = false; };
+
+            slider.addEventListener('pointerdown', (event) => {
                 dragging = true;
-                update(e.clientX);
+                slider.setPointerCapture(event.pointerId);
+                update(event.clientX);
             });
 
-            window.addEventListener('mousemove', e => {
-                if (dragging) update(e.clientX);
+            slider.addEventListener('pointermove', (event) => {
+                if (dragging) update(event.clientX);
             });
 
-            window.addEventListener('mouseup', () => dragging = false);
-
-            slider.addEventListener('touchstart', e => {
-                dragging = true;
-                update(e.touches[0].clientX);
-            }, { passive: true });
-
-            window.addEventListener('touchmove', e => {
-                if (dragging) update(e.touches[0].clientX);
-            }, { passive: true });
-
-            window.addEventListener('touchend', () => dragging = false);
+            slider.addEventListener('pointerup', stop);
+            slider.addEventListener('pointercancel', stop);
         });
     }
 
     // ─────────────────────────────────────────────────────────
-    // BOOT
+    // 6. PRELOADER + HERO VIDEO
     // ─────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-        initNavigation();
-        initUI();
-        initMission();
-        initTeam();
-        initProjects();
+    function initPreloader() {
+        const preloader = $('#preloader');
+        if (!preloader) return;
 
-        const preloader = document.getElementById('preloader');
-        const heroVideo = document.getElementById('hero-video');
-
-        // PRELOADER
         setTimeout(() => {
-            if (preloader) {
-                preloader.classList.add('loaded');
-                setTimeout(() => preloader.style.display = 'none', 400);
-            }
+            preloader.classList.add('loaded');
+            setTimeout(() => { preloader.style.display = 'none'; }, 500);
         }, 800);
+    }
 
-        // HERO VIDEO FIX
-        if (heroVideo) {
-            const tryPlay = () => {
-                heroVideo.muted = true;
+    function initHeroVideo() {
+        const video = $('#hero-video');
+        if (!video) return;
 
-                const playPromise = heroVideo.play();
-                if (playPromise) {
-                    playPromise
-                        .then(() => heroVideo.classList.add('loaded'))
-                        .catch(() => heroVideo.style.display = 'none');
-                }
-            };
+        const show = () => video.classList.add('loaded');
 
-            if (heroVideo.readyState >= 3) {
-                tryPlay();
-            } else {
-                heroVideo.addEventListener('canplay', tryPlay, { once: true });
-            }
+        const tryPlay = () => {
+            video.muted = true; // required for autoplay
+            // If autoplay is blocked, still reveal the element so the poster image shows
+            video.play()?.then(show).catch(show);
+        };
 
-            heroVideo.addEventListener('play', () => {
-                heroVideo.classList.add('loaded');
-            }, { once: true });
+        video.addEventListener('play', show, { once: true });
 
-            heroVideo.addEventListener('ended', () => {
-                heroVideo.pause();
-
-                const loader = document.getElementById('video-end-loader');
-                if (loader) {
-                    loader.style.display = 'flex';
-
-                    setTimeout(() => {
-                        loader.classList.add('hidden');
-
-                        setTimeout(() => {
-                            loader.style.display = 'none';
-                        }, 500);
-
-                    }, 3500);
-                }
-            });
+        if (video.readyState >= 3) {
+            tryPlay();
+        } else {
+            video.addEventListener('canplay', tryPlay, { once: true });
         }
+    }
 
-        console.log('✅ Enactus site ready — optimized version');
-    });
+    // ─────────────────────────────────────────────────────────
+    // 7. BOOT
+    // ─────────────────────────────────────────────────────────
+    function init() {
+        initNavigation();
+        initReveal();
+        initTeam();
+        initCompareSliders();
+        initPreloader();
+        initHeroVideo();
+    }
 
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
